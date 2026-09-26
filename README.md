@@ -339,11 +339,11 @@ screenshots/
 
 | Home Page | Login Page |
 |---|---|
-| <img src="static/screenshots/campusfind-home.png" alt="CampusFind Home" width="400"> | <img src="static/screenshots/campusfind-login.png" alt="CampusFind Login" width="400"> |
+| <img src="screenshots/campusfind-home.png" alt="CampusFind Home" width="400"> | <img src="screenshots/campusfind-login.png" alt="CampusFind Login" width="400"> |
 
 | Report Item | Item Details |
 |---|---|
-| <img src="static/screenshots/campusfind-report.png" alt="CampusFind Report" width="400"> | <img src="static/screenshots/campusfind-details.png" alt="CampusFind Details" width="400"> |
+| <img src="screenshots/campusfind-report.png" alt="CampusFind Report" width="400"> | <img src="screenshots/campusfind-details.png" alt="CampusFind Details" width="400"> |
 
 </div>
 
