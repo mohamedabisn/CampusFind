@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusFind • Jamal Mohamed College</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="navbar">
+  <div class="nav-inner">
+    <div class="college">
+      <a
+    href="https://jmc.edu/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="college-logo-link"
+    title="Jamal Mohamed College"
+>
+    <img
+        src="{{ url_for('static', filename='images/jmc-logo.png') }}"
+        alt="Jamal Mohamed College"
+        class="college-logo"
+    >
+</a>
+      <div><div class="college-name">JAMAL MOHAMED<br>COLLEGE</div><div class="college-sub">(Autonomous)<br>Since 1951</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="cf-brand"><div class="cf-icon">⌖</div><div><b>Campus<span>Find</span></b><small>Lost. Found. Reunited.</small></div></div>
+    <div class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Search items, categories, locations..." autocomplete="off"></div>
+    <div class="nav-actions">
+      <button class="primary-btn" id="openReport">⊕ &nbsp; Report Item</button>
+      <button class="bell" id="bellBtn">♧<span class="badge" id="noticeCount">0</span></button>
+      <button class="avatar-btn" id="profileBtn"><span class="avatar" id="headerAvatar">{{ current_user.name[:2].upper() }}</span><span class="profile-copy"><b id="headerName">{{ current_user.name }}</b><small id="headerMeta">{{ current_user.department or 'Campus User' }}{% if current_user.year %} · {{ current_user.year }}{% endif %}</small></span><span>⌄</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="profile-menu" id="profileMenu">
+  <div class="menu-user"><b>{{ current_user.name }}</b><span>{{ current_user.email }} · {{ current_user.id }}</span></div>
+  <button id="editProfile">Edit profile</button>
+  <button id="myItems">My reports</button>
+  <a href="{{ url_for('logout') }}">Sign out</a>
+</div>
+<div class="notification-panel" id="notificationPanel"><h3>Notifications</h3><div id="notificationList"><div class="notice">Loading...</div></div></div>
+
+<main class="page">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="filter-head"><h2>Filters</h2><button class="clear" id="clearAll">Clear All</button></div>
+      <p class="looking">I'm looking for</p>
+      <div class="status-pills">
+        <button class="status-pill active" data-status="all">All Items</button>
+        <button class="status-pill" data-status="lost">Lost Items</button>
+        <button class="status-pill" data-status="found">Found Items</button>
+      </div>
+      <div class="filter-section"><button class="filter-title" data-toggle="catList">▦ &nbsp; Category <span>⌃</span></button><div class="filter-list" id="catList">{% for c in categories %}<label class="check"><input type="checkbox" data-filter="category" value="{{ c }}"><span>{{ c }}</span><span class="count" data-count-for="{{ c }}">0</span></label>{% endfor %}</div></div>
+      <div class="filter-section"><button class="filter-title" data-toggle="deptList">♙ &nbsp; Department <span>⌄</span></button><div class="filter-list" id="deptList">{% for d in departments %}<label class="check"><input type="checkbox" data-filter="department" value="{{ d }}"><span>{{ d }}</span></label>{% endfor %}</div></div>
+      <div class="filter-section"><button class="filter-title" data-toggle="colorList">◉ &nbsp; Color <span>⌄</span></button><div class="filter-list" id="colorList">{% for c in colors %}<label class="check"><input type="checkbox" data-filter="color" value="{{ c }}"><span>{{ c }}</span></label>{% endfor %}</div></div>
+      <div class="filter-section"><button class="filter-title" data-toggle="locList">⌖ &nbsp; Location <span>⌄</span></button><div class="filter-list" id="locList">{% for l in locations %}<label class="check"><input type="checkbox" data-filter="location" value="{{ l }}"><span>{{ l }}</span></label>{% endfor %}</div></div>
+      <div class="help-card"><h3>Did you find something?</h3><p>Help someone get their item back.</p><button id="helpReport">Report Now</button></div>
+    </aside>
+
+    <section class="content">
+      <div class="hero"><h1>Welcome back, <span id="welcomeName">{{ current_user.name.split()[0] }}</span>! 👋</h1><p>Let's help reconnect lost items with their owners.</p><div class="hero-art">🎒 🔎</div></div>
+      <div class="content-tools">
+        <select class="sort" id="sortSelect"><option value="newest">☷ &nbsp; Newest First</option><option value="oldest">Oldest First</option><option value="az">A - Z</option></select>
+        <button class="view-btn" id="gridView">▦</button><button class="view-btn" id="listView">☷</button>
+      </div>
+      <div class="results"><h2 id="showingText">Showing 0 items</h2><span>Live campus reports</span></div>
+      <div class="grid" id="itemsGrid"><div class="empty"><h3>Loading campus items...</h3><p>Please wait.</p></div></div>
+
+      <div class="bottom-bar">
+        <div class="benefit"><div class="benefit-icon">♧</div><div><b>Quick & Easy</b><span>Report items in just a few clicks</span></div></div>
+        <div class="benefit"><div class="benefit-icon">♙</div><div><b>Campus Users</b><span>Connect with genuine campus users</span></div></div>
+        <div class="benefit"><div class="benefit-icon">✓</div><div><b>Safe & Secure</b><span>Your contact details stay with your reports</span></div></div>
+        <div class="benefit"><div class="benefit-icon">✤</div><div><b>Helping Community</b><span>Together we make our campus better</span></div></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- REPORT MODAL -->
+<div class="modal" id="reportModal"><div class="modal-box">
+<button class="close" data-close="reportModal">×</button><h2>Report an Item</h2><p class="muted">Create a lost or found report. Your account details are attached automatically.</p>
+<div class="report-type"><button class="type-btn active" data-type="lost">🔴 I Lost Something</button><button class="type-btn" data-type="found">🟢 I Found Something</button></div>
+<form id="reportForm"><input type="hidden" name="item_type" id="itemType" value="lost"><div class="form-grid">
+<div class="field"><label>Item name *</label><input name="title" required placeholder="Example: iPhone 15 Black"></div>
+<div class="field"><label>Category *</label><select name="category" required><option value="">Select category</option>{% for c in categories %}<option>{{ c }}</option>{% endfor %}</select></div>
+<div class="field"><label>Department</label><select name="department"><option value="">Select department</option>{% for d in departments %}<option>{{ d }}</option>{% endfor %}</select></div>
+<div class="field"><label>Color</label><input name="color" placeholder="Example: Black"></div>
+<div class="field"><label>Location</label><input name="location" placeholder="Where was it lost/found?"></div>
+<div class="field"><label>Item image</label><input name="image" type="file" accept="image/*"></div>
+<div class="field full"><label>Description</label><textarea name="description" rows="4" placeholder="Identifying details, time, place, marks, etc."></textarea></div>
+</div><div class="modal-actions"><button type="button" class="secondary" data-close="reportModal">Cancel</button><button class="primary-btn" type="submit">Publish Item</button></div></form>
+</div></div>
+
+<!-- DETAILS -->
+<div class="modal" id="detailModal"><div class="modal-box"><button class="close" data-close="detailModal">×</button><div id="detailContent"></div></div></div>
+
+<!-- PROFILE -->
+<div class="modal" id="profileModal"><div class="modal-box"><button class="close" data-close="profileModal">×</button><h2>Edit profile</h2><p class="muted">Your changes will update your account and the reports you posted.</p><form id="profileForm"><div class="form-grid"><div class="field"><label>User ID</label><input value="{{ current_user.id }}" disabled></div><div class="field"><label>Email</label><input name="email" type="email" value="{{ current_user.email }}" required></div><div class="field"><label>Name</label><input name="name" value="{{ current_user.name }}" required></div><div class="field"><label>Phone</label><input name="phone" value="{{ current_user.phone or '' }}"></div><div class="field"><label>Department</label><select name="department"><option value="">Select department</option>{% for d in departments %}<option {% if current_user.department == d %}selected{% endif %}>{{ d }}</option>{% endfor %}</select></div><div class="field"><label>Year</label><select name="year"><option value="">Select year</option>{% for y in ['1st Year','2nd Year','3rd Year','Final Year'] %}<option {% if current_user.year == y %}selected{% endif %}>{{ y }}</option>{% endfor %}</select></div></div><div class="modal-actions"><button type="button" class="secondary" data-close="profileModal">Cancel</button><button class="primary-btn">Save changes</button></div></form></div></div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

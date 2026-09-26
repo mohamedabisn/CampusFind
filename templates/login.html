@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusFind • Sign in</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+<div class="auth-shell">
+  <section class="auth-brand">
+    <div class="college-brand">
+      <img src="{{ url_for('static', filename='images/jmc-logo.png') }}" alt="Jamal Mohamed College">
+      <div>
+        <div class="college-name">JAMAL MOHAMED<br>COLLEGE</div>
+        <div class="college-sub">(Autonomous)<br>Since 1951</div>
+      </div>
+    </div>
+    <div class="brand-divider"></div>
+    <div class="campus-brand">
+      <div class="shield">⌖</div>
+      <div><b>Campus<span>Find</span></b><small>Lost. Found. Reunited.</small></div>
+    </div>
+    <div class="auth-copy">
+      <span class="eyebrow">JMC CAMPUS COMMUNITY</span>
+      <h1>Reconnect with what matters.</h1>
+      <p>Report lost items, discover found belongings and connect safely with fellow campus users.</p>
+      <div class="mini-stats"><span>Quick reports</span><span>Campus-only</span><span>Direct contact</span></div>
+    </div>
+  </section>
+
+  <main class="auth-card">
+    <div class="auth-card-head">
+      <div>
+        <span class="eyebrow">WELCOME TO CAMPUSFIND</span>
+        <h2 id="authTitle">Sign in</h2>
+        <p id="authSubtitle">Use your CampusFind account to continue.</p>
+      </div>
+      <div class="round-mark">CF</div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="auth-tabs">
+      <button class="auth-tab {{ 'active' if mode != 'register' else '' }}" data-mode="login">Sign in</button>
+      <button class="auth-tab {{ 'active' if mode == 'register' else '' }}" data-mode="register">Create account</button>
+    </div>
+
+    <form id="loginForm" class="auth-form {{ 'hidden' if mode == 'register' else '' }}" method="POST" action="{{ url_for('do_login') }}">
+      <input type="hidden" name="next" value="{{ request.args.get('next','') }}">
+      <label>Email address<input type="email" name="email" placeholder="you@example.com" required autocomplete="email"></label>
+      <label>Password<div class="password-field"><input type="password" name="password" placeholder="Enter your password" required autocomplete="current-password"><button type="button" class="show-pass">Show</button></div></label>
+      <button class="primary-auth" type="submit">Sign in to CampusFind <span>→</span></button>
+      <p class="switch-text">New to CampusFind? <button type="button" class="inline-switch" data-mode="register">Create an account</button></p>
+    </form>
+
+    <form id="registerForm" class="auth-form {{ '' if mode == 'register' else 'hidden' }}" method="POST" action="{{ url_for('register') }}">
+      <div class="form-grid">
+        <label>Full name<input type="text" name="name" placeholder="Your full name" required autocomplete="name"></label>
+        <label>Email address<input type="email" name="email" placeholder="you@example.com" required autocomplete="email"></label>
+        <label>Phone number<input type="tel" name="phone" placeholder="+91 98765 43210" autocomplete="tel"></label>
+        <label>Department<select name="department"><option value="">Select department</option>{% for d in departments %}<option>{{ d }}</option>{% endfor %}</select></label>
+        <label>Year<select name="year"><option value="">Select year</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>Final Year</option></select></label>
+        <label>Password<input type="password" name="password" placeholder="Minimum 6 characters" minlength="6" required autocomplete="new-password"></label>
+        <label class="full">Confirm password<input type="password" name="confirm_password" placeholder="Re-enter your password" minlength="6" required autocomplete="new-password"></label>
+      </div>
+      <button class="primary-auth" type="submit">Create my account <span>→</span></button>
+      <p class="switch-text">Already have an account? <button type="button" class="inline-switch" data-mode="login">Sign in</button></p>
+    </form>
+
+    <div class="auth-note">Your profile name, email, department and year will appear in the CampusFind header after you sign in.</div>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>
